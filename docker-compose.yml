@@ -12,13 +12,18 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   web:
     build: .
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       FLASK_ENV: development
       DATABASE_URL: mysql+pymysql://flaskuser:flaskpassword@db/flaskdb
