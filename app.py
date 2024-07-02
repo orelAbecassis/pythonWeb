@@ -2,6 +2,8 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
 import dotenv
+from faker import Faker
+
 
 # Use dotenv to load environment variables from .env file
 dotenv.load_dotenv()
@@ -26,6 +28,14 @@ class Person(db.Model):
 with app.app_context():
     db.create_all()
 
+faker = Faker()
+
+def generate_fake_data():
+    for _ in range(100):  # Generate 100 fake persons
+        fake_person = Person(name=faker.name(), email=faker.email())
+        db.session.add(fake_person)
+    db.session.commit()
+
 
 @app.route('/')
 def hello_world():
@@ -35,4 +45,6 @@ def hello_world():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        generate_fake_data()
     app.run(host='0.0.0.0', port=3000)
