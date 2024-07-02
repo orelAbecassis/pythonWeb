@@ -21,7 +21,7 @@ services:
       - db
     environment:
       FLASK_ENV: development
-      DATABASE_URI: mysql+pymysql://flaskuser:flaskpassword@db/flaskdb
+      DATABASE_URL: mysql+pymysql://flaskuser:flaskpassword@db/flaskdb
 
 volumes:
   db_data:
