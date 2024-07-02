@@ -4,17 +4,17 @@ services:
   db:
     image: mariadb:lts
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: flaskdb
-      MYSQL_USER: flaskuser
-      MYSQL_PASSWORD: flaskpassword
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: flaskdb
+      MARIADB_USER: flaskuser
+      MARIADB_PASSWORD: flaskpassword
     ports:
       - "3306:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mariadb
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_interval: '5s'
+      start_period: '5s'
       timeout: '5s'
       retries: 5
 
