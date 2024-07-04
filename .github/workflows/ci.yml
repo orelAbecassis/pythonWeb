@@ -26,6 +26,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt  # Installe les dépendances du projet
 
+      - name: Install pytest
+        run: |
+          pip install pytest  # Installe pytest
+
       - name: Run tests
         run: |
           pytest  # Exécute les tests avec pytest, ajustez cette commande selon vos besoins
