@@ -6,7 +6,13 @@ from app import app, db, Person
 def client():
     # Configure une base de données de test
     app.config['TESTING'] = True
-    test_database_url = os.getenv('TEST_DATABASE_URL', 'sqlite:///:memory:')  # Use in-memory SQLite if TEST_DATABASE_URL is not set
+
+    # Définir la variable d'environnement pour TEST_DATABASE_URL si elle n'existe pas
+    if 'TEST_DATABASE_URL' not in os.environ:
+        os.environ['TEST_DATABASE_URL'] = 'sqlite:///:memory:'
+
+    # Utiliser TEST_DATABASE_URL pour configurer SQLAlchemy
+    test_database_url = os.getenv('TEST_DATABASE_URL')
     app.config['SQLALCHEMY_DATABASE_URI'] = test_database_url
 
     with app.test_client() as client:

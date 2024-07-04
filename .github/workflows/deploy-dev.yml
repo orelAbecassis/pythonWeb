@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest  # Spécifie que le job doit s'exécuter sur un runner Ubuntu
 
     env:
+      DATABASE_URL: 'sqlite:///:memory:'  # Assurer la configuration de la base de données pour l'application
       TEST_DATABASE_URL: 'sqlite:///:memory:'  # Configure la base de données de test
 
     steps:
