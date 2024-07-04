@@ -2,12 +2,18 @@ name: CI for All Branches Except Main
 
 on:
   push:
+    branches-ignore:
+      - main
+  pull_request:
     branches:
-      - dev
+      - main
 
 jobs:
   test-and-build:
     runs-on: ubuntu-latest  # Spécifie que le job doit s'exécuter sur un runner Ubuntu
+
+    env:
+      TEST_DATABASE_URL: 'sqlite:///:memory:'  # Configure la base de données de test
 
     steps:
       - name: Checkout code
@@ -23,13 +29,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt  # Installe les dépendances du projet
 
-      - name: Install pytest
-        run: |
-          pip install pytest  # Installe pytest
-
       - name: Run tests
         run: |
-          pytest  # Exécute les tests avec pytest, ajustez cette commande selon vos besoins
+          pytest  # Exécute les tests avec pytest
 
       - name: Build the project
         run: |

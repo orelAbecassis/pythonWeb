@@ -2,12 +2,11 @@ import os
 import pytest
 from app import app, db, Person
 
-
 @pytest.fixture
 def client():
-    # Configure une bdd de test
+    # Configure une base de données de test
     app.config['TESTING'] = True
-    test_database_url = os.getenv('TEST_DATABASE_URL')
+    test_database_url = os.getenv('TEST_DATABASE_URL', 'sqlite:///:memory:')  # Use in-memory SQLite if TEST_DATABASE_URL is not set
     app.config['SQLALCHEMY_DATABASE_URI'] = test_database_url
 
     with app.test_client() as client:
@@ -16,13 +15,11 @@ def client():
             yield client
             db.drop_all()  # Drop tables after testing
 
-
 def test_homepage(client):
     """Test that the homepage loads correctly."""
     rv = client.get('/')
     assert rv.status_code == 200
-    assert b'<!DOCTYPE html>' in rv.data  # Assuming your HTML template starts with <!DOCTYPE html>
-
+    assert b'<!DOCTYPE html>' in rv.data  # Assuming your HTML template starts with <!DOCTYPE html'
 
 def test_generate_fake_data(client):
     """Test that fake data is generated correctly."""
