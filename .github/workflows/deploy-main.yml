@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
 
 jobs:
   block-push-to-main:
@@ -36,7 +35,7 @@ jobs:
       - name: Run Ansible Playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'  # Désactive la vérification de clé SSH (optionnel)
-        run: ansible-playbook -i '3.93.174.189,' -u orelabk6 --private-key ${{ secrets.SSH_PRIVATE_KEY }} ./deploy.yml
+        run: ansible-playbook -i '3.93.174.189,' -u orelabk6 --private-key ${{ secrets.SSH_PRIVATE_KEY }} ./deploy-main.yml
         # Remplacez 'your_server_ip' par l'adresse IP de votre serveur
         # Remplacez 'your_ssh_user' par le nom d'utilisateur SSH
         # Utilisez le secret GitHub pour la clé privée SSH
