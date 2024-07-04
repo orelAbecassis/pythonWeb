@@ -51,7 +51,7 @@
 
     - name: Clone the project repository
       git:
-        repo: 'https://github.com/Phenixel/pythonWeb.git'
+        repo: 'https://github.com/orelAbecassis/pythonWeb.git'
         dest: /home/orelabk6/pythonWeb
 
     - name: Ensure the project directory exists
