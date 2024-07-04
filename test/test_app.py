@@ -5,9 +5,10 @@ from app import app, db, Person
 
 @pytest.fixture
 def client():
-    # Configure the app for testing
+    # Configure une bdd de test
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Use an in-memory SQLite database for testing
+    test_database_url = os.getenv('TEST_DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = test_database_url
 
     with app.test_client() as client:
         with app.app_context():
