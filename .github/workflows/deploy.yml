@@ -1,0 +1,32 @@
+name: Deploiement sur le Server
+
+on:
+  push:
+    branches:
+      - main  # Déclenche le workflow sur les pushs vers la branche principale
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Spécifie que le job doit s'exécuter sur un runner Ubuntu
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Action pour vérifier le code source du dépôt
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  # Configure l'environnement Python 3.8
+
+    - name: Install Ansible
+      run: |
+        python -m pip install --upgrade pip
+        pip install ansible  # Installe Ansible
+
+    - name: Run Ansible Playbook
+      env:
+        ANSIBLE_HOST_KEY_CHECKING: 'false'  # Désactive la vérification de clé SSH (optionnel)
+      run: ansible-playbook -i '3.93.174.189,' -u orelabk6 --private-key ${{ secrets.SSH_PRIVATE_KEY }} deploy.yml
+      # Remplacez 'your_server_ip' par l'adresse IP de votre serveur
+      # Remplacez 'your_ssh_user' par le nom d'utilisateur SSH
+      # Utilisez le secret GitHub pour la clé privée SSH

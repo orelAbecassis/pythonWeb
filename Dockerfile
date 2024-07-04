@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiez le contenu de l'application dans le répertoire de travail
 COPY . .
+COPY .env .env
 
 # Exposez le port 3000
 EXPOSE 3000

@@ -1,0 +1,75 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update YUM package index
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install Amazon Linux Extras
+      yum:
+        name: amazon-linux-extras
+        state: latest
+
+    - name: Enable Python3.8 in Amazon Linux Extras
+      command: amazon-linux-extras enable python3.8
+
+    - name: Install Python3.8
+      yum:
+        name: python38
+
+    - name: Install git
+      yum:
+        name: git
+
+    - name: Ensure pip is installed
+      command: python3.8 -m ensurepip
+
+    - name: Upgrade pip to the latest version
+      command: python3.8 -m pip install --upgrade pip
+
+    - name: Install virtualenv using pip
+      pip:
+        name: virtualenv
+        executable: /usr/local/bin/pip3.8
+
+    - name: Get uname -s
+      shell: uname -s
+      register: uname_s
+      changed_when: false
+
+    - name: Get uname -m
+      shell: uname -m
+      register: uname_m
+      changed_when: false
+
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Clone the project repository
+      git:
+        repo: 'https://github.com/Phenixel/pythonWeb.git'
+        dest: /home/orelabk6/pythonWeb
+
+    - name: Ensure the project directory exists
+      file:
+        path: /home/orelabk6/pythonWeb
+        state: directory
+
+    - name: Create a virtual environment using virtualenv
+      command: python3.8 -m virtualenv venv
+      args:
+        chdir: '/home/orelabk6/pythonWeb/'
+
+    - name: Install project dependencies
+      pip:
+        requirements: /home/orelabk6/pythonWeb/requirements.txt
+        virtualenv: /home/orelabk6/pythonWeb/venv
+
+    - name: Build and start Docker services
+      command: docker-compose up -d
+      args:
+        chdir: /home/orelabk6/pythonWeb
