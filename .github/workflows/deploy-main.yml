@@ -12,11 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
       - name: Install Ansible
         run: |
           python -m pip install --upgrade pip
@@ -25,10 +20,24 @@ jobs:
       - name: List files in the directory
         run: ls -al
 
-      - name: Run Ansible Playbook
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'false'
+      - name: Setup SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
-          chmod 600 private_key
-          ansible-playbook -i '54.163.22.82,' -u orelabk6 --private-key private_key ./deploy-server.yml
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Verify SSH Key Exists
+        run: |
+          if [ ! -f ~/.ssh/id_rsa ]; then
+            echo "SSH key does not exist"
+            exit 1
+          fi
+
+      - name: Debug SSH Connection
+        run: |
+          ssh -vvv -i ~/.ssh/id_rsa id_rsa@${{ secrets.SERVER_HOST }} exit
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i ./ansible/inventory ./deploy-server.yml --private-key ~/.ssh/id_rsa
