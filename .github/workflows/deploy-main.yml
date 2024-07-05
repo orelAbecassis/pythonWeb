@@ -36,7 +36,7 @@ jobs:
 
       - name: Debug SSH Connection
         run: |
-          ssh -vvv -i ~/.ssh/id_rsa id_rsa@${{ secrets.SERVER_HOST }} exit
+          ssh -vvv -i ~/.ssh/id_rsa orelabk6@${{ secrets.SERVER_HOST }} exit
 
       - name: Run Ansible Playbook
         run: |
