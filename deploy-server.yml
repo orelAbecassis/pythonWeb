@@ -69,6 +69,12 @@
         requirements: /home/orelabk6/pythonWeb/requirements.txt
         virtualenv: /home/orelabk6/pythonWeb/venv
 
+    - name: Copy .env file to server
+      copy:
+        src: /path/to/your/local/.env
+        dest: /home/orelabk6/pythonWeb/.env
+        mode: '0644'
+
     - name: Build and start Docker services
       command: docker-compose up -d
       args:
